@@ -23,3 +23,14 @@ User stories are prioritised using the **MoSCoW method**:
 | US-07 | As a student, I want to delete a task, so that I can remove items that are no longer relevant. | Must |
 
 ---
+
+# Should Have
+
+| ID | User Story | Priority |
+|----|------------|---------|
+| US-08 | As a student, I want to view my tasks for the current week, so that I can plan ahead and manage my time across multiple days. | Should |
+| US-09 | As a student, I want to receive a reminder notification before a deadline, so that I don't forget about upcoming submissions. | Should |
+| US-10 | As a student, I want to filter my task list by module, so that I can focus on one subject at a time when studying. | Should |
+| US-11 | As a student, I want to filter my task list by priority level, so that I can quickly find my most urgent tasks. | Should |
+
+---
