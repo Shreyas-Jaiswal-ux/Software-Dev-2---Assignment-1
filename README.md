@@ -34,3 +34,22 @@ User stories are prioritised using the **MoSCoW method**:
 | US-11 | As a student, I want to filter my task list by priority level, so that I can quickly find my most urgent tasks. | Should |
 
 ---
+
+# Could Have
+
+| ID | User Story | Priority |
+|----|------------|---------|
+| US-12 | As a student, I want to see a progress summary (e.g. tasks completed vs. remaining), so that I feel motivated and can gauge how much work is left. | Could |
+| US-13 | As a student, I want to sort tasks by deadline or priority, so that I can view my workload in the order that suits me best. | Could |
+| US-14 | As a student, I want my tasks to be saved when I close the browser, so that I don't lose my data between sessions. | Could |
+| US-15 | As a student, I want a colour-coded visual indicator for priority levels, so that I can scan my task list quickly at a glance. | Could |
+
+---
+
+# Won't Have (This Version)
+
+| ID | User Story | Priority |
+|----|------------|---------|
+| US-16 | As a student, I want to sync my tasks across multiple devices, so that I can access them from my phone and laptop. | Won't |
+| US-17 | As a student, I want to share tasks or deadlines with classmates, so that we can coordinate on group work. | Won't |
+| US-18 | As a student, I want to import deadlines from my university timetable automatically, so that I don't have to enter them manually. | Won't |
