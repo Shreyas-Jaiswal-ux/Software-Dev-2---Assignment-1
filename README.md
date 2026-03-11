@@ -1,4 +1,4 @@
-# StudyFlow — User & System Requirements
+# StudyFlow - User & System Requirements
 
 ## User Requirements (User Stories)
 
