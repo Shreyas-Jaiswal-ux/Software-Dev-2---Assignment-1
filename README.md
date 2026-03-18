@@ -276,6 +276,340 @@ System requirements define what the application must do technically to support t
 
 ### BL-13: localStorage persistence
 - **Related Stories:** US-14, SR-07
+
+# StudyFlow — Design & Development Documentation
+
+---
+
+## 3.1 Overall Design & Architecture
+
+StudyFlow follows a **three-layer architecture** that separates concerns between presentation, logic, and data.
+
+### Presentation Layer (HTML / CSS)
+Handles the user interface.
+
+- Single page: `index.html`
+- Styling: `style.css`
+- Structure:
+  - Dashboard (task list)
+  - Task form (add/edit)
+  - Controls (filters/views)
+
+Uses semantic HTML:
+```html
+<header> <main> <section> <form>
+```
+
+---
+
+### Logic Layer (JavaScript)
+
+All behaviour is handled in `app.js`, divided into logical modules:
+
+- **Task Manager** → CRUD operations  
+- **Validation** → input checks (e.g. empty title, past date)  
+- **Renderer** → updates UI (DOM re-rendering)  
+- **Utilities** → helpers (date formatting, IDs, colour mapping)
+
+---
+
+### Data Layer (localStorage)
+
+- Tasks stored as JSON in `localStorage`
+- Updated on:
+  - Add
+  - Edit
+  - Delete
+  - Complete toggle
+- Loaded on page start
+
+✔ No backend required  
+✔ Data persists between sessions  
+
+---
+
+### File Structure
+
+```bash
+StudyFlow/
+├── index.html      # Structure
+├── style.css       # Styling
+├── app.js          # Logic
+└── README.md       # Documentation
+```
+
+---
+
+### Data Flow
+
+1. User interacts with UI  
+2. Event triggers JS function  
+3. Input is validated  
+4. Task array is updated  
+5. Data saved to `localStorage`  
+6. UI re-renders  
+
+---
+
+## 3.2 Development Strategy
+
+Development follows an **iterative, feature-by-feature approach**.
+
+### Development Order
+
+1. BL-01 → Project setup  
+2. BL-02 → Task creation  
+3. BL-03 → Validation  
+4. BL-04 → Display tasks  
+5. BL-05 → Complete task  
+6. BL-06 → Edit task  
+7. BL-07 → Delete task  
+8. BL-08 → Styling  
+
+✔ App remains usable at every stage  
+✔ Reduces risk and debugging complexity  
+
+---
+
+### Version Control
+
+- Git used throughout  
+- Commit per feature  
+
+Example:
+```bash
+BL-02: Add task creation form
+```
+
+✔ Clear history  
+✔ Easy rollback  
+
+---
+
+## 3.3 Technology Stack
+
+### Core Technologies
+
+| Technology | Role | Justification |
+|-----------|------|--------------|
+| HTML5 | Structure | Semantic + built-in form elements |
+| CSS3 | Styling | Responsive via Flexbox + media queries |
+| JavaScript (ES6+) | Logic | Lightweight, no framework needed |
+| localStorage | Persistence | No backend required |
+
+---
+
+### Why No Framework?
+
+- Single-page app  
+- Low complexity  
+- Avoid:
+  - Build tools
+  - Dependencies
+  - Overhead  
+
+✔ Faster development  
+✔ Easier debugging  
+✔ Runs directly in browser  
+
+---
+
+### Why localStorage?
+
+✔ No server  
+✔ No authentication  
+✔ Instant persistence  
+
+**Trade-off:**  
+- No cross-device sync  
+
+Future improvement:
+- Firebase / REST API  
+
+---
+
+## 3.4 User Interface Design
+
+### Design Principles
+
+1. **Minimalist UI** → reduce cognitive load  
+2. **Calm colours** → blue + neutral palette  
+3. **Readable typography** → ≥16px  
+4. **Accessible touch targets** → ≥44×44px  
+
+---
+
+### Colour Palette
+
+| Colour | Hex | Usage |
+|-------|-----|------|
+| Dark Blue | `#1A3A5C` | Header |
+| Medium Blue | `#2E6B9E` | Active |
+| Light Blue | `#E8F0FE` | Cards |
+| White | `#FFFFFF` | Background |
+| Grey | `#F5F5F5` | Sections |
+| Dark Grey | `#333333` | Text |
+| Red | `#D9534F` | High priority |
+| Amber | `#F0AD4E` | Medium |
+| Green | `#5CB85C` | Low |
+
+---
+
+### Layout Structure
+
+- **Header**
+  - App name
+  - Progress summary
+
+- **Task Form**
+  - Add / Edit tasks
+  - Pre-filled when editing
+
+- **Task List**
+  - Cards with:
+    - Title
+    - Deadline
+    - Module
+    - Priority badge
+
+- **Empty State**
+```text
+"No tasks yet — add one to get started!"
+```
+
+---
+
+### Responsive Design
+
+- Mobile-first (360–428px)
+- Media query at 768px
+- Flexbox layout
+- No horizontal scrolling
+
+---
+
+## 3.5 State Diagram
+
+### Application States
+
+- Empty State  
+- Task List View  
+- Adding Task  
+- Editing Task  
+- Confirming Delete  
+- Task Completed  
+
+---
+
+### State Transitions
+
+| From | Action | To |
+|------|--------|----|
+| Empty | Add Task | Task List |
+| List | Add Task | Updated List |
+| List | Edit | Editing |
+| Editing | Save | Updated List |
+| Editing | Cancel | List |
+| List | Delete | Confirm |
+| Confirm | Yes | Updated List |
+| Confirm | No | List |
+| List | Toggle | Completed |
+| Completed | Toggle | List |
+| List | All deleted | Empty |
+
+---
+
+## 3.6 Technical Challenges
+
+| Challenge | Solution |
+|----------|--------|
+| Unique IDs | `Date.now()` + random |
+| Date handling | Use `YYYY-MM-DD` strings |
+| Form reuse | `editingTaskId` flag |
+| Rendering | Full re-render (acceptable <100 tasks) |
+| localStorage limits | JSON stringify/parse |
+| Mobile inputs | Use native HTML inputs |
+
+---
+
+## 3.7 Test Plan
+
+Testing is **manual**, based on acceptance criteria.
+
+### Test Log Structure
+
+| Field | Description |
+|------|------------|
+| Test ID | Unique ID |
+| BL | Backlog item |
+| Description | What is tested |
+| Steps | How to test |
+| Expected | Expected result |
+| Actual | Actual result |
+| Status | Pass/Fail |
+| Notes | Bugs/fixes |
+
+---
+
+### Sample Test Cases
+
+#### Task Creation (BL-02)
+
+| ID | Test | Expected |
+|----|------|---------|
+| T-01 | Create full task | Appears correctly |
+| T-02 | Form reset | Fields cleared |
+| T-03 | Object check | Correct structure |
+
+---
+
+#### Validation (BL-03)
+
+| ID | Test | Expected |
+|----|------|---------|
+| T-04 | Empty title | Error shown |
+| T-05 | No deadline | Error shown |
+| T-06 | Past date | Error shown |
+| T-07 | Fix input | Error disappears |
+
+---
+
+#### Task Display (BL-04)
+
+| ID | Test | Expected |
+|----|------|---------|
+| T-08 | Display fields | All visible |
+| T-09 | Colours | Correct priority |
+| T-10 | Auto update | Instant render |
+
+---
+
+### Test Log Template
+
+| ID | BL | Status | Actual | Date | Notes |
+|----|----|--------|--------|------|------|
+| T-01 | BL-02 | | | | |
+| T-02 | BL-02 | | | | |
+| T-03 | BL-02 | | | | |
+| T-04 | BL-03 | | | | |
+| T-05 | BL-03 | | | | |
+| T-06 | BL-03 | | | | |
+| T-07 | BL-03 | | | | |
+| T-08 | BL-04 | | | | |
+| T-09 | BL-04 | | | | |
+| T-10 | BL-04 | | | | |
+| T-11 | BL-05 | | | | |
+| T-12 | BL-05 | | | | |
+| T-13 | BL-06 | | | | |
+| T-14 | BL-06 | | | | |
+| T-15 | BL-06 | | | | |
+| T-16 | BL-07 | | | | |
+| T-17 | BL-07 | | | | |
+| T-18 | BL-07 | | | | |
+| T-19 | BL-08 | | | | |
+| T-20 | BL-08 | | | | |
+| T-21 | BL-08 | | | | |
+| T-22 | BL-08 | | | | |
 - **Description:** Save the task array to the browser's localStorage whenever a task is added, edited, deleted, or marked as complete. On page load, retrieve and display any previously saved tasks.
 - **Acceptance Criteria:**
   - [ ] Tasks are saved to localStorage after every change (add, edit, delete, complete)
