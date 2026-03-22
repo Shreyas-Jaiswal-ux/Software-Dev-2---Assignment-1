@@ -605,3 +605,87 @@ Testing will be conducted manually by working through each backlog item's accept
 ---
 
 
+
+# 4. Project Management
+
+*This section will be completed throughout the sprint with evidence of regular reviews and progress tracking.*
+
+## 4.1 Sprint Review Meetings
+
+Document each review meeting with the following format:
+
+### Review 1 — Sprint Planning (Date: __)
+
+**What was done since the last meeting:**
+- Starting point — no previous work
+
+**What is planned for this session:**
+- 
+
+**Current problems and barriers:**
+- 
+
+---
+
+### Review 2 — Mid-Sprint Check (Date: __)
+
+**What was done since the last meeting:**
+- 
+
+**What is planned for this session:**
+- 
+
+**Current problems and barriers:**
+- 
+
+---
+
+### Review 3 — Sprint Review & Retrospective (Date: __)
+
+**What was done since the last meeting:**
+- 
+
+**What is planned for this session:**
+- 
+
+**Current problems and barriers:**
+- 
+
+**Retrospective — what went well and what could be improved:**
+- 
+
+---
+
+## 4.2 Burndown Chart
+
+```mermaid
+xychart-beta
+    title "Sprint 1 Burndown Chart"
+    x-axis ["10 Mar", "12 Mar", "14 Mar", "16 Mar", "18 Mar", "20 Mar"]
+    y-axis "Story Points Remaining" 0 --> 22
+    line [22, 18, 14, 9, 4, 0]
+```
+
+Track the completion of story points over the sprint duration:
+
+| Date | Story Points Remaining | Notes |
+|------|----------------------|-------|
+| 10 Mar | 22 | Sprint start |
+| 12 Mar | 18 | Project setup and task form underway |
+| 14 Mar | 14 | Validation and task rendering added |
+| 16 Mar | 9 | Completion toggle and edit function progressed |
+| 18 Mar | 4 | Delete function and responsive CSS nearly complete |
+| 20 Mar | 0 | Sprint end (target) |
+
+---
+
+## 4.3 Backlog Reviews
+
+Document any changes to the backlog during the sprint (e.g. items re-prioritised, acceptance criteria updated, new items added).
+
+| Date | Change | Reason |
+|------|--------|--------|
+| | | |
+
+---
+
