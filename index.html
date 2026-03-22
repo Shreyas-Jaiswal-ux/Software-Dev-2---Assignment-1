@@ -1,1 +1,73 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyFlow — Personal Task Planner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <h1 class="header__title">StudyFlow</h1>
+        <p class="header__summary" id="task-summary">No tasks yet</p>
+    </header>
+
+    <main class="main">
+
+        <!-- Task Form Section -->
+        <section class="form-section">
+            <h2 class="form-section__title" id="form-title">Add New Task</h2>
+            <form class="task-form" id="task-form">
+
+                <div class="form-group">
+                    <label for="task-title">Task Title</label>
+                    <input type="text" id="task-title" class="form-input" placeholder="e.g. SD2 Assignment">
+                    <span class="error-message" id="title-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-deadline">Deadline</label>
+                    <input type="date" id="task-deadline" class="form-input">
+                    <span class="error-message" id="deadline-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-priority">Priority</label>
+                    <select id="task-priority" class="form-input">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-module">Module</label>
+                    <input type="text" id="task-module" class="form-input" placeholder="e.g. Software Development 2">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary" id="submit-btn">Add Task</button>
+                    <button type="button" class="btn btn--secondary" id="cancel-btn" style="display: none;">Cancel</button>
+                </div>
+
+            </form>
+        </section>
+
+        <!-- Task List Section -->
+        <section class="task-section">
+            <h2 class="task-section__title">My Tasks</h2>
+            <div class="task-list" id="task-list">
+                <!-- Task cards will be rendered here by JavaScript -->
+                <p class="empty-state" id="empty-state">No tasks yet — add one to get started!</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
