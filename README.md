@@ -720,3 +720,49 @@ Document any changes to the backlog during the sprint (e.g. items re-prioritised
 | Semantic HTML | Page structure | Improves accessibility for screen readers and SEO |
 
 ---
+
+
+# 6. Completion & Testing
+
+*This section will be completed once development is finished.*
+
+## 6.1 Requirements Traceability
+
+Confirm which user stories and system requirements have been implemented:
+
+| ID | Requirement | Implemented? | Evidence |
+|----|------------|-------------|----------|
+| US-01 | Create a task with title and deadline | | |
+| US-02 | Assign priority level | | |
+| US-03 | Tag task with module name | | |
+| US-04 | Mark task as complete | | |
+| US-05 | View tasks for today | | |
+| US-06 | Edit an existing task | | |
+| US-07 | Delete a task | | |
+| SR-01 | Full CRUD operations | | |
+| SR-05 | Priority colour coding | | |
+| NFR-01 | HTML/CSS/JS, no backend | | |
+| NFR-02 | Mobile-first responsive | | |
+| NFR-07 | Input validation | | |
+
+## 6.2 Completed Test Log
+
+Refer to the test log in Section 3.7 and fill in the **Status**, **Actual Result**, **Date**, and **Notes** columns after testing each case.
+
+## 6.3 Known Issues & Bugs
+
+| Issue | Severity | Status | Notes |
+|-------|----------|--------|-------|
+| | | | |
+
+## 6.4 Screenshots
+
+Add screenshots of the final working application here.
+
+Recommended evidence:
+- mobile view
+- desktop view
+- task creation
+- completed task
+- edit mode
+- empty state
