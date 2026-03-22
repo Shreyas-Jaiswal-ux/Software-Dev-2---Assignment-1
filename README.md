@@ -689,3 +689,34 @@ Document any changes to the backlog during the sprint (e.g. items re-prioritised
 
 ---
 
+
+# 5. Software Tools & Techniques
+
+*Document the tools and coding techniques used throughout development.*
+
+## 5.1 Development Tools
+
+| Tool | Purpose | Why Chosen |
+|------|---------|------------|
+| Visual Studio Code | Code editor | Lightweight, built-in terminal, extensive extension support, IntelliSense for HTML/CSS/JS |
+| Google Chrome DevTools | Debugging & testing | DOM inspection, console for JS debugging, device emulation for responsive testing |
+| Git | Version control | Track changes, commit history per feature, ability to roll back |
+| GitHub | Remote repository | Hosts the project, provides backup, submission via repo link |
+| Live Server (VS Code extension) | Local development server | Auto-refreshes the browser on save, speeds up development workflow |
+
+## 5.2 Coding Techniques
+
+| Technique | Where Used | Benefit |
+|-----------|-----------|---------|
+| DOM manipulation | Rendering tasks, updating UI | Direct control over page content without a framework |
+| Event listeners | Form submission, button clicks, checkbox toggles | Clean separation between HTML structure and JS behaviour |
+| Array methods (`filter`, `map`, `find`, `findIndex`) | Task filtering, searching, rendering | Concise and readable data operations |
+| Template literals | Building HTML strings for task cards | Cleaner string construction with embedded expressions |
+| Destructuring | Extracting task properties | Shorter, more readable code when working with task objects |
+| `JSON.stringify()` / `JSON.parse()` | localStorage read/write | Converts task array to/from storable string format |
+| CSS custom properties (variables) | Colour palette, spacing | Consistent theming; easy to update colours in one place |
+| CSS Flexbox | Page layout, card layout, form layout | Responsive alignment without floats or complex positioning |
+| Media queries | Responsive breakpoints | Adapts layout from mobile to desktop at `768px` |
+| Semantic HTML | Page structure | Improves accessibility for screen readers and SEO |
+
+---
