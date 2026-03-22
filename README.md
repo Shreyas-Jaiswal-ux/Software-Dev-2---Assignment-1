@@ -260,3 +260,348 @@ Sprint 1 focuses entirely on the **Must Have** features that form the minimum vi
 The future backlog items are ordered by value: daily/weekly views and filtering would be the next priority as they directly improve how students navigate their tasks, followed by localStorage persistence to ensure data survives between sessions, and finally reminders and progress tracking which add polish but are not required for the core workflow. Each deferred item includes a rationale to demonstrate that scope decisions were made deliberately rather than by omission.
 
 ---
+
+
+# 3. Design & Development Documentation
+
+## 3.1 Overall Design & Architecture
+
+StudyFlow follows a **three-layer architecture** that separates concerns between presentation, logic, and data.
+
+### Presentation Layer (HTML / CSS)
+
+Handles the user interface. It consists of a single HTML page (`index.html`) styled by an external stylesheet (`style.css`). The page is divided into three main areas:
+
+- dashboard that displays the task list
+- task form for adding and editing tasks
+- controls section for filtering and view options
+
+The HTML uses semantic elements (`<header>`, `<main>`, `<section>`, `<form>`) for accessibility and readability.
+
+### Logic Layer (JavaScript)
+
+All application behaviour is handled by a single JavaScript file (`app.js`). This layer contains four logical modules:
+
+- **Task Manager** — handles all CRUD (Create, Read, Update, Delete) operations on the task array
+- **Validation** — checks user input before a task is created or updated (e.g. ensuring the title is not empty, the deadline is not in the past)
+- **Renderer** — updates the DOM whenever the task data changes, re-drawing the task list and any summary information
+- **Utilities** — helper functions for date formatting, generating unique task IDs, and priority colour mapping
+
+### Data Layer (Browser localStorage)
+
+Tasks are stored as a JSON array in the browser's `localStorage`. Every time a task is added, edited, deleted, or marked as complete, the updated array is written to `localStorage`. On page load, the app reads from `localStorage` and renders any previously saved tasks. This removes the need for a backend server while still allowing data to persist between sessions.
+
+### File Structure
+
+```text
+StudyFlow/
+├── index.html      — Page structure and content
+├── style.css       — All styling and responsive design
+├── app.js          — Application logic and behaviour
+└── README.md       — Project documentation (this file)
+```
+
+### Data Flow
+
+1. The user interacts with the UI (e.g. clicks **Add Task**).
+2. A DOM event triggers a JavaScript function in the logic layer.
+3. The function validates the input and updates the task array.
+4. The updated array is saved to localStorage.
+5. The renderer re-draws the task list on the page.
+
+### Architecture Diagram
+
+```mermaid
+flowchart TD
+
+    UI[Presentation Layer<br>HTML + CSS]
+    JS[Logic Layer<br>JavaScript app.js]
+    LS[Data Layer<br>localStorage]
+
+    UI -->|User actions| JS
+    JS -->|Validate input| JS
+    JS -->|Update task array| JS
+    JS -->|Save data| LS
+    LS -->|Load saved tasks| JS
+    JS -->|Render updated UI| UI
+```
+
+### Design Justification
+
+The architecture follows a lightweight client-side model suitable for a single-user application. Separating presentation, logic, and data improves maintainability because each layer can be modified independently without significantly affecting the others.
+
+Using localStorage instead of a backend reduces system complexity and setup time, which is appropriate given the scope and constraints of the project. The trade-off is reduced scalability and no cross-device access, but this is acceptable for the current version and is already acknowledged in the deferred requirements.
+
+---
+
+## 3.2 Development Strategy
+
+StudyFlow is developed using an **iterative, feature-by-feature approach** within a single Scrum sprint. Rather than building the entire application at once, each backlog item is developed, tested, and completed before moving to the next. This reduces risk because the app is in a working state after each feature is added.
+
+### Development Order
+
+1. **Project setup and HTML structure (BL-01)** — establish the foundation before any functionality
+2. **Task creation form (BL-02)** — the most fundamental feature; nothing else works without it
+3. **Input validation (BL-03)** — added immediately after the form to prevent bad data from entering the system early
+4. **Task list display (BL-04)** — renders the created tasks so the user gets visual feedback
+5. **Mark task as complete (BL-05)** — core interaction that gives the app its primary value
+6. **Edit task (BL-06)** — allows users to correct mistakes, which is essential for real-world use
+7. **Delete task (BL-07)** — completes the full CRUD cycle
+8. **Mobile-first responsive CSS (BL-08)** — styling is applied last to avoid rework as the HTML structure evolves during feature development
+
+This order ensures that at any point during development, the app is functional with whatever features have been completed so far. For example, after completing BL-04, the app can already create and display tasks even though editing and deleting are not yet available.
+
+### Version Control
+
+Git is used throughout development with regular commits after each feature is completed. Each commit message references the relevant backlog item.
+
+Example:
+```bash
+BL-02: Add task creation form with priority and module fields
+```
+
+This creates a clear development history and makes it easy to roll back if a feature introduces bugs.
+
+---
+
+## 3.3 Technology Stack
+
+### Core Technologies
+
+| Technology | Role | Justification |
+|-----------|------|---------------|
+| HTML5 | Page structure | Semantic elements improve accessibility and SEO. Native form elements (date picker, dropdown) reduce the need for custom components. |
+| CSS3 | Styling & layout | Flexbox and media queries enable a responsive, mobile-first layout without any CSS frameworks. Custom properties (variables) allow consistent theming. |
+| JavaScript (ES6+) | Application logic | Handles all interactivity, data management, and DOM manipulation. No framework is needed for an app of this scope — vanilla JS keeps the codebase lightweight and avoids unnecessary dependencies. |
+| Browser localStorage | Data persistence | Stores tasks as a JSON string between sessions. Suitable for a single-user, client-side application. Avoids the complexity of setting up a backend server or database. |
+
+### Why No Framework?
+
+A framework like React or Vue would add unnecessary complexity for an application of this size. StudyFlow has a single page with a small number of interactive elements. Vanilla JavaScript provides full control over the DOM without the overhead of a build system, package manager, or framework-specific syntax. This also means the app can be opened directly in a browser from the file system with no server or build step required, which simplifies both development and the demo.
+
+### Why localStorage Over a Database?
+
+StudyFlow is a personal planner used by one student on one device. localStorage is ideal for this use case because it requires no server setup, no authentication, and no network requests. The trade-off is that data is tied to one browser on one device, but this is acceptable for the current scope. A future version could migrate to a backend database (e.g. Firebase or a REST API with SQLite) to support cross-device syncing, which is documented in the **Won't Have** requirements.
+
+---
+
+## 3.4 User Interface Design
+
+### Design Principles
+
+The UI design follows four principles identified in the project pitch:
+
+1. **Minimalist layout** — reduce cognitive load by showing only essential information. The interface avoids clutter and uses whitespace to separate content areas clearly.
+2. **Calm colour palette** — blues and neutral tones are used throughout to create a focused, low-stress environment. High-contrast colours (red, amber, green) are reserved for priority indicators.
+3. **Clear typography** — a minimum font size of 16px for body text ensures readability on small screens. Headings use a clear visual hierarchy.
+4. **Accessible touch targets** — all buttons and interactive elements have a minimum size of 44×44px, meeting mobile accessibility guidelines.
+
+### Colour Palette
+
+| Colour | Hex Code | Usage |
+|--------|----------|-------|
+| Dark Blue | `#1A3A5C` | Header background, primary buttons |
+| Medium Blue | `#2E6B9E` | Active states, links |
+| Light Blue | `#E8F0FE` | Card backgrounds, subtle highlights |
+| White | `#FFFFFF` | Page background |
+| Light Grey | `#F5F5F5` | Section backgrounds, disabled states |
+| Dark Grey | `#333333` | Body text |
+| Red | `#D9534F` | High priority indicator |
+| Amber/Orange | `#F0AD4E` | Medium priority indicator |
+| Green | `#5CB85C` | Low priority indicator, completed tasks |
+
+### Screen Layout
+
+StudyFlow is a single-page application with the following layout:
+
+- **Header** — contains the app name (**StudyFlow**) and a summary of task completion (e.g. `3 of 7 tasks completed`)
+- **Task Form Section** — a collapsible or always-visible form with fields for title, deadline, priority, and module. An **Add Task** button submits the form. When editing, the form is pre-filled with the selected task's current values and the button changes to **Save Changes**
+- **Task List Section** — the main content area. Tasks are displayed as cards, each showing the title, deadline, module tag, and a colour-coded priority badge. Each card has action buttons for edit, delete, and a checkbox to mark as complete
+- **Empty State** — when no tasks exist, a friendly message is displayed (e.g. `No tasks yet — add one to get started!`) to guide the user
+
+### Responsive Design Approach
+
+The app uses a **mobile-first** CSS strategy:
+
+- The base styles target mobile screens (360–428px width)
+- A media query at 768px adjusts the layout for tablets and desktops, such as placing the form and task list side by side instead of stacked vertically
+- Flexbox is used for layout to ensure elements reflow naturally at different screen widths
+- No horizontal scrolling occurs at any viewport size
+
+---
+
+## 3.5 State Diagram
+
+The application has several key states that the user transitions between during normal use.
+
+### Application States
+
+1. **Empty State** — no tasks exist. The app displays a welcome message and the task form
+2. **Task List View** — one or more tasks exist. The task list is displayed with all active and completed tasks
+3. **Adding Task** — the user is filling in the task creation form
+4. **Editing Task** — the user has clicked **Edit** on an existing task. The form is pre-filled with the task's current values
+5. **Confirming Delete** — the user has clicked **Delete** and a confirmation prompt is shown
+6. **Task Completed** — the user has toggled a task's completion status
+
+### State Transitions
+
+| From State | Action | To State |
+|-----------|--------|----------|
+| Empty State | User fills in form and clicks **Add Task** | Task List View |
+| Task List View | User fills in form and clicks **Add Task** | Task List View (updated) |
+| Task List View | User clicks **Edit** on a task | Editing Task |
+| Editing Task | User saves changes | Task List View (updated) |
+| Editing Task | User cancels | Task List View (unchanged) |
+| Task List View | User clicks **Delete** on a task | Confirming Delete |
+| Confirming Delete | User confirms | Task List View (task removed) |
+| Confirming Delete | User cancels | Task List View (unchanged) |
+| Task List View | User clicks checkbox on a task | Task Completed (visual update) |
+| Task Completed | User clicks checkbox again | Task List View (un-completed) |
+| Task List View | All tasks deleted | Empty State |
+
+### State Diagram
+
+```mermaid
+stateDiagram-v2
+
+    [*] --> EmptyState
+
+    EmptyState --> TaskList : Add Task
+
+    TaskList --> TaskList : Add Task
+    TaskList --> Editing : Click Edit
+    TaskList --> ConfirmDelete : Click Delete
+    TaskList --> Completed : Toggle Complete
+
+    Editing --> TaskList : Save Changes
+    Editing --> TaskList : Cancel
+
+    ConfirmDelete --> TaskList : Confirm Delete
+    ConfirmDelete --> TaskList : Cancel
+
+    Completed --> TaskList : Toggle Again
+
+    TaskList --> EmptyState : Delete All Tasks
+```
+
+---
+
+## 3.6 Technical Challenges
+
+| Challenge | Description | Planned Solution |
+|-----------|------------|-----------------|
+| Unique task IDs | Each task needs a unique identifier so that edit and delete operations target the correct task, even if multiple tasks have the same title. | Generate a unique ID using `Date.now()` combined with a random number. This avoids collisions without needing a database or external library. |
+| Date handling | JavaScript date objects can behave inconsistently across browsers and time zones. Comparing today's date with a task's deadline needs to be reliable. | Store deadlines as `YYYY-MM-DD` strings (matching the HTML date input format). Compare dates as strings for daily view filtering, avoiding time zone issues. |
+| Form reuse for add and edit | The same form is used for both creating a new task and editing an existing one. The app needs to know whether to call the add or update function on submission. | Use a flag variable (e.g. `editingTaskId = null`). If the flag is null, the form creates a new task. If it holds an ID, the form updates that task. The flag is reset after each submission. |
+| Rendering performance | Re-rendering the entire task list on every change could cause flickering or lag if the list grows large. | Clear and rebuild the task list container on each render. For the expected number of tasks (under 100), this approach is performant enough. A virtual DOM or partial update would be over-engineering at this scale. |
+| localStorage limits | localStorage has a ~5MB limit per domain and only stores strings. | Stringify the task array with `JSON.stringify()` before saving and parse it with `JSON.parse()` on load. 5MB is more than sufficient for thousands of text-based task objects. |
+| Mobile input usability | Date pickers and dropdowns behave differently across mobile browsers. Some may not trigger native mobile pickers. | Use native HTML5 `<input type="date">` and `<select>` elements, which trigger the operating system's native pickers on most mobile browsers. Test on both iOS Safari and Android Chrome. |
+
+---
+
+## 3.7 Test Plan
+
+Testing will be conducted manually by working through each backlog item's acceptance criteria. Each criterion is treated as an individual test case. Results will be recorded in a test log.
+
+### Test Log Structure
+
+| Column | Description |
+|--------|------------|
+| Test ID | Unique identifier (e.g. `T-01`) |
+| Related Backlog Item | Which BL item is being tested |
+| Test Description | What is being tested |
+| Steps to Reproduce | Exact steps to perform the test |
+| Expected Result | What should happen |
+| Actual Result | What actually happened |
+| Status | Pass / Fail |
+| Notes | Any observations, bugs found, or fixes applied |
+
+### Test Cases
+
+#### BL-02: Task Creation Form
+
+| Test ID | Test Description | Steps | Expected Result |
+|---------|-----------------|-------|-----------------|
+| T-01 | Create a task with all fields filled | Enter title `SD2 Report`, select deadline `25/03/2026`, set priority to `High`, enter module `Software Development 2`, click **Add Task** | Task appears in the list with all details displayed correctly |
+| T-02 | Form clears after submission | Complete T-01 | All form fields are empty after the task is added |
+| T-03 | Task object has correct properties | Create a task and inspect the JavaScript task array in the browser console | Object contains: `id` (number), `title` (string), `deadline` (string), `priority` (string), `module` (string), `completed` (`false`) |
+
+#### BL-03: Input Validation
+
+| Test ID | Test Description | Steps | Expected Result |
+|---------|-----------------|-------|-----------------|
+| T-04 | Submit with empty title | Leave title blank, fill other fields, click **Add Task** | Form does not submit. Error message shown near title field |
+| T-05 | Submit with no deadline | Enter title, leave deadline empty, click **Add Task** | Form does not submit. Error message shown near deadline field |
+| T-06 | Submit with past deadline | Enter title, select yesterday's date, click **Add Task** | Form does not submit. Error message indicates deadline must be today or later |
+| T-07 | Error clears on correction | Trigger T-04, then type a title | Error message disappears |
+
+#### BL-04: Task List Display
+
+| Test ID | Test Description | Steps | Expected Result |
+|---------|-----------------|-------|-----------------|
+| T-08 | Task card shows all details | Create a task with known values | Card displays: title, formatted deadline, module name, and priority badge |
+| T-09 | Priority colour coding | Create three tasks with Low, Medium, and High priority | Low shows green badge, Medium shows amber/orange, High shows red |
+| T-10 | List updates immediately | Add a new task | Task appears in the list without needing to refresh the page |
+
+#### BL-05: Mark Task as Complete
+
+| Test ID | Test Description | Steps | Expected Result |
+|---------|-----------------|-------|-----------------|
+| T-11 | Toggle task to complete | Click the checkbox on an active task | Task appears faded/struck through. Completed status is `true` |
+| T-12 | Toggle task back to incomplete | Click the checkbox on a completed task | Task returns to normal appearance. Completed status is `false` |
+
+#### BL-06: Edit Task
+
+| Test ID | Test Description | Steps | Expected Result |
+|---------|-----------------|-------|-----------------|
+| T-13 | Edit button opens pre-filled form | Click **Edit** on a task | Form fields are populated with the task's current values |
+| T-14 | Save changes updates the task | Change the title in the edit form, click **Save Changes** | Task card shows the updated title. Other fields remain unchanged |
+| T-15 | Cancel edit preserves original | Click **Edit**, change a field, then click **Cancel** | Task remains unchanged in the list |
+
+#### BL-07: Delete Task
+
+| Test ID | Test Description | Steps | Expected Result |
+|---------|-----------------|-------|-----------------|
+| T-16 | Delete shows confirmation | Click **Delete** on a task | A confirmation prompt appears (e.g. `Are you sure you want to delete this task?`) |
+| T-17 | Confirm delete removes task | Click **Delete**, then confirm | Task is removed from the list |
+| T-18 | Cancel delete preserves task | Click **Delete**, then cancel | Task remains in the list |
+
+#### BL-08: Mobile-First Responsive CSS
+
+| Test ID | Test Description | Steps | Expected Result |
+|---------|-----------------|-------|-----------------|
+| T-19 | Mobile layout renders correctly | Open the app in Chrome DevTools at `375px` width (iPhone SE) | Layout is single-column, no horizontal scrolling, text is readable |
+| T-20 | Desktop layout adapts | Open the app at `1024px` width | Layout adjusts (e.g. form and list side by side) |
+| T-21 | Touch targets are accessible | Inspect button sizes on mobile view | All buttons and interactive elements are at least `44×44px` |
+| T-22 | Colour palette matches design | Visual inspection | Header uses dark blue, cards use light blue/white, priorities are colour-coded |
+
+### Test Log (to be completed during testing)
+
+| Test ID | BL | Status | Actual Result | Date | Notes |
+|---------|-----|--------|---------------|------|-------|
+| T-01 | BL-02 | | | | |
+| T-02 | BL-02 | | | | |
+| T-03 | BL-02 | | | | |
+| T-04 | BL-03 | | | | |
+| T-05 | BL-03 | | | | |
+| T-06 | BL-03 | | | | |
+| T-07 | BL-03 | | | | |
+| T-08 | BL-04 | | | | |
+| T-09 | BL-04 | | | | |
+| T-10 | BL-04 | | | | |
+| T-11 | BL-05 | | | | |
+| T-12 | BL-05 | | | | |
+| T-13 | BL-06 | | | | |
+| T-14 | BL-06 | | | | |
+| T-15 | BL-06 | | | | |
+| T-16 | BL-07 | | | | |
+| T-17 | BL-07 | | | | |
+| T-18 | BL-07 | | | | |
+| T-19 | BL-08 | | | | |
+| T-20 | BL-08 | | | | |
+| T-21 | BL-08 | | | | |
+| T-22 | BL-08 | | | | |
+
+---
+
+
