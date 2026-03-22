@@ -102,3 +102,161 @@ System requirements define what the application must do technically to support t
 | NFR-08 | The codebase shall be modular, with separate files or clearly separated sections for HTML structure, CSS styling, and JavaScript logic. | Maintainability |
 
 ---
+
+
+# 2. Product Backlog
+
+## Sprint Overview
+
+| Sprint | Duration | Focus | Goal |
+|--------|----------|-------|------|
+| Sprint 1 | 10–20 Mar | Core functionality | Deliver a fully working task manager with CRUD operations, priority levels, module tagging, daily view, completion tracking, and mobile-first responsive design. The app should be usable end-to-end by the end of this sprint. |
+
+**Estimation Scale (Story Points):**
+- 1 = Trivial (under 1 hour, e.g. small UI tweak)
+- 2 = Small (1–2 hours, e.g. a simple feature)
+- 3 = Medium (2–4 hours, e.g. a feature with some logic)
+- 5 = Large (4–8 hours, e.g. a complex feature with multiple parts)
+- 8 = Complex (8+ hours, e.g. a major feature requiring research and iteration)
+
+---
+
+## Sprint 1 — Core Functionality
+
+### BL-01: Project setup and HTML structure
+- **Related Stories:** NFR-01, NFR-08
+- **Description:** Set up the project folder structure with separate HTML, CSS, and JS files. Create the base HTML page with semantic structure including a header, main content area, task list container, and a form/modal area for adding tasks.
+- **Acceptance Criteria:**
+  - [ ] Project contains `index.html`, `style.css`, and `app.js` as separate files
+  - [ ] HTML uses semantic elements (`header`, `main`, `section`, `form`)
+  - [ ] Page loads in a browser without errors
+  - [ ] Basic layout structure is visible (header, content area, empty task list)
+- **Story Points:** 2
+
+---
+
+### BL-02: Task creation form
+- **Related Stories:** US-01, US-02, US-03, SR-01
+- **Description:** Build a form that allows the user to create a new task by entering a title, selecting a deadline (date picker), choosing a priority level (Low/Medium/High), and entering a module name. On submission, the task should be added to the task list displayed on the page.
+- **Acceptance Criteria:**
+  - [ ] Form includes fields for: title (text input), deadline (date input), priority (dropdown with Low/Medium/High), and module name (text input)
+  - [ ] Clicking **Add Task** creates a new task and displays it in the task list
+  - [ ] The form clears after successful submission
+  - [ ] Each task is stored as a JavaScript object with properties: `id`, `title`, `deadline`, `priority`, `module`, and `completed` (default: `false`)
+- **Story Points:** 3
+
+---
+
+### BL-03: Input validation
+- **Related Stories:** NFR-07
+- **Description:** Add validation to the task creation form to prevent invalid or incomplete data from being submitted. Display clear, user-friendly error messages when validation fails.
+- **Acceptance Criteria:**
+  - [ ] The form does not submit if the title field is empty
+  - [ ] The form does not submit if no deadline is selected
+  - [ ] The form does not accept a deadline date in the past
+  - [ ] An error message is displayed next to or below the relevant field when validation fails
+  - [ ] Error messages disappear once the user corrects the input
+- **Story Points:** 2
+
+---
+
+### BL-04: Task list display
+- **Related Stories:** US-05, SR-02, SR-05
+- **Description:** Display all tasks in a list/card layout. Each task card should show the title, deadline, module name, and priority level. Priority should be visually distinguished using colour coding (e.g. green for Low, amber for Medium, red for High).
+- **Acceptance Criteria:**
+  - [ ] All tasks currently in the array are rendered on the page
+  - [ ] Each task card displays: title, deadline (formatted as a readable date), module name, and priority level
+  - [ ] Priority levels are colour-coded: green (Low), amber/orange (Medium), red (High)
+  - [ ] Completed tasks are visually distinct (e.g. strikethrough text or faded appearance)
+  - [ ] The task list updates immediately when a new task is added
+- **Story Points:** 3
+
+---
+
+### BL-05: Mark task as complete
+- **Related Stories:** US-04, SR-01
+- **Description:** Add a checkbox or button to each task card that allows the user to toggle the task's completion status. The visual appearance of the task should change to reflect whether it is complete or incomplete.
+- **Acceptance Criteria:**
+  - [ ] Each task has a clickable checkbox or **Complete** button
+  - [ ] Clicking the checkbox toggles the task's completed status (`true`/`false`)
+  - [ ] Completed tasks show a visual change (e.g. strikethrough, greyed out, or moved to a completed section)
+  - [ ] The user can un-complete a task by clicking the checkbox again
+- **Story Points:** 2
+
+---
+
+### BL-06: Edit task
+- **Related Stories:** US-06, SR-01
+- **Description:** Allow the user to edit an existing task's details (title, deadline, priority, module). This could be implemented as an inline edit, a pre-filled form, or a modal that opens with the task's current values.
+- **Acceptance Criteria:**
+  - [ ] Each task has an **Edit** button
+  - [ ] Clicking **Edit** opens the task's details in an editable form pre-filled with current values
+  - [ ] The user can change any field (title, deadline, priority, module) and save
+  - [ ] The updated task is immediately reflected in the task list
+  - [ ] Cancelling an edit does not change the task
+- **Story Points:** 3
+
+---
+
+### BL-07: Delete task
+- **Related Stories:** US-07, SR-01
+- **Description:** Allow the user to delete a task from the list. Include a confirmation step to prevent accidental deletion.
+- **Acceptance Criteria:**
+  - [ ] Each task has a **Delete** button
+  - [ ] Clicking **Delete** shows a confirmation prompt (e.g. **Are you sure?**)
+  - [ ] Confirming the prompt removes the task from the list and from the data array
+  - [ ] The task list re-renders immediately after deletion
+  - [ ] Cancelling the prompt keeps the task unchanged
+- **Story Points:** 2
+
+---
+
+### BL-08: Mobile-first responsive CSS
+- **Related Stories:** NFR-02, NFR-04, NFR-05, NFR-06
+- **Description:** Style the application with a mobile-first approach. Use a calm blue/neutral colour palette, ensure minimum font sizes and tap target sizes are met, and add media queries for larger screens.
+- **Acceptance Criteria:**
+  - [ ] The layout is designed for mobile viewports (360–428px) first
+  - [ ] Body text is a minimum of 16px
+  - [ ] All buttons and interactive elements have a minimum tap target of 44×44px
+  - [ ] Colour palette uses blues and neutrals as defined in the pitch
+  - [ ] A media query adjusts the layout for desktop screens (768px+)
+  - [ ] No horizontal scrolling on mobile viewports
+- **Story Points:** 5
+
+---
+
+**Sprint 1 Total: 22 story points**
+
+---
+
+## Future Backlog (Out of Sprint Scope)
+
+The following items have been identified as valuable features but fall outside the scope of Sprint 1. They are documented here to demonstrate awareness of the full product vision and would be prioritised in future development cycles.
+
+| ID | Feature | Related Stories | Story Points | Rationale for Deferral |
+|----|---------|----------------|-------------|----------------------|
+| BL-09 | Daily view filter (show only today's tasks) | US-05, SR-02 | 3 | Enhances navigation but the full task list is usable without it |
+| BL-10 | Weekly view | US-08, SR-03 | 3 | Useful for planning ahead but not essential for core functionality |
+| BL-11 | Filter by module and priority | US-10, US-11, SR-04 | 3 | Improves usability for students with many tasks; core app works without it |
+| BL-12 | Sort tasks by deadline or priority | US-13 | 2 | A convenience feature that can be added once the core is stable |
+| BL-13 | localStorage persistence | US-14, SR-07 | 3 | Important for real-world use but not required for a working demo |
+| BL-14 | Reminder notifications | US-09, SR-06 | 5 | Technically complex (browser Notification API); deferred to keep the sprint achievable |
+| BL-15 | Progress summary | US-12, SR-08 | 2 | Motivational feature; lower priority than core task management |
+
+---
+
+## Backlog Summary
+
+| Category | Items | Total Story Points |
+|----------|-------|--------------------|
+| Sprint 1 (In Scope) | BL-01 to BL-08 | 22 |
+| Future Backlog (Out of Scope) | BL-09 to BL-15 | 21 |
+| **Total** | **15 items** | **43** |
+
+### Prioritisation Rationale
+
+Sprint 1 focuses entirely on the **Must Have** features that form the minimum viable product. Without task creation, display, editing, deletion, and completion tracking, the app cannot function at all. Mobile-first styling is included in Sprint 1 because the pitch defines StudyFlow as a mobile-first application, so the UI must reflect this from the start.
+
+The future backlog items are ordered by value: daily/weekly views and filtering would be the next priority as they directly improve how students navigate their tasks, followed by localStorage persistence to ensure data survives between sessions, and finally reminders and progress tracking which add polish but are not required for the core workflow. Each deferred item includes a rationale to demonstrate that scope decisions were made deliberately rather than by omission.
+
+---
