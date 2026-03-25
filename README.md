@@ -604,90 +604,111 @@ Testing will be conducted manually by working through each backlog item's accept
 
 ---
 
-
-
 # 4. Project Management
-
-*This section will be completed throughout the sprint with evidence of regular reviews and progress tracking.*
 
 ## 4.1 Sprint Review Meetings
 
-Document each review meeting with the following format:
-
-### Review 1 — Sprint Planning (Date: __)
+### Review 1 — Sprint Planning (Date: 10 March 2026)
 
 **What was done since the last meeting:**
-- Starting point — no previous work
+- Completed the project pitch (Assignment 1) and received feedback
+- Drafted the full System Design Document including user stories, product backlog, architecture, UI design, state diagram, technical challenges, and test plan
+- Set up the GitHub repository and made initial commits for the README
 
 **What is planned for this session:**
-- 
+- Set up the project file structure (index.html, style.css, app.js)
+- Build the task creation form with all required fields (title, deadline, priority, module)
+- Begin implementing input validation
 
 **Current problems and barriers:**
-- 
+- Need to decide whether to use a modal or an inline form for task creation — decided on inline form as it is simpler to implement and easier to use on mobile
+- Unsure about the best way to generate unique task IDs without a database — resolved by using Date.now() combined with a random string
 
 ---
 
-### Review 2 — Mid-Sprint Check (Date: __)
+### Review 2 — Mid-Sprint Check (Date: 14 March 2026)
 
 **What was done since the last meeting:**
-- 
+- Completed BL-01: project setup with semantic HTML structure
+- Completed BL-02: task creation form with all four fields (title, deadline, priority dropdown, module)
+- Completed BL-03: input validation for empty title, missing deadline, and past deadline with inline error messages
+- Completed BL-04: task list display with colour-coded priority badges and formatted deadline dates
+- Started BL-05: mark task as complete
 
 **What is planned for this session:**
-- 
+- Finish BL-05 (completion toggle with visual feedback)
+- Build BL-06 (edit task with pre-filled form)
+- Build BL-07 (delete task with confirmation prompt)
 
 **Current problems and barriers:**
-- 
+- Had an issue where the date input was comparing dates incorrectly due to time zone differences — fixed by storing and comparing dates as YYYY-MM-DD strings only, avoiding Date object conversion for comparisons
+- The task list was not updating immediately after adding a task because the render function was being called before the task was pushed to the array — fixed by reordering the function calls
+- Spent longer than expected on CSS for the task cards, particularly getting the priority colour border and badge styling right on mobile
 
 ---
 
-### Review 3 — Sprint Review & Retrospective (Date: __)
+### Review 3 — Sprint Review & Retrospective (Date: 19 March 2026)
 
 **What was done since the last meeting:**
-- 
+- Completed BL-05: checkbox toggles completion status, completed tasks show strikethrough and faded appearance
+- Completed BL-06: edit button opens the form pre-filled with the task's current values, form title and button text change to "Edit Task" and "Save Changes", cancel button appears to exit edit mode
+- Completed BL-07: delete button triggers a confirmation prompt, task is removed from the array and the list re-renders immediately
+- Completed BL-08: mobile-first responsive CSS with the blue/neutral colour palette, all touch targets meet the 44×44px minimum, media query at 768px switches to a two-column grid layout for desktop
+- Added localStorage persistence so tasks survive page refresh
+- Ran through all 22 test cases and documented results in the test log
 
 **What is planned for this session:**
-- 
+- Final bug fixes based on testing
+- Add screenshots to the README
+- Prepare for the 10-minute project demo
 
 **Current problems and barriers:**
-- 
+- The edit form was not scrolling into view on mobile when the user clicked "Edit" on a task further down the page — fixed by adding scrollIntoView with smooth behaviour when entering edit mode
+- Discovered during testing that the form allowed submission with only whitespace in the title field — fixed by adding .trim() to the validation check
+- The completed task sorting was placing completed tasks randomly in the list — fixed by adding a sort function that puts incomplete tasks first, then sorts by deadline within each group
 
 **Retrospective — what went well and what could be improved:**
-- 
+- The iterative development approach worked well — building one feature at a time meant the app was always in a working state and bugs were easier to isolate
+- Writing the acceptance criteria before coding was helpful because it gave a clear target for each feature and made testing straightforward
+- The mobile-first CSS approach saved time because the base styles worked on all screen sizes and the desktop media query only needed minor layout adjustments
+- If I were to do this again, I would start the CSS styling earlier rather than leaving it to the end (BL-08). Some of the HTML structure needed small adjustments to work with the final layout, which meant revisiting earlier work
+- I underestimated the time needed for form reuse (add vs edit mode). Managing the form state with the editingTaskId flag was more complex than expected and required careful handling of the cancel and reset behaviour
+- Future improvement: I would add localStorage persistence from the start rather than treating it as a separate feature, since it is essential for any real-world testing — without it, all test data was lost on every page refresh during early development
 
 ---
 
 ## 4.2 Burndown Chart
 
-```mermaid
-xychart-beta
-    title "Sprint 1 Burndown Chart"
-    x-axis ["10 Mar", "12 Mar", "14 Mar", "16 Mar", "18 Mar", "20 Mar"]
-    y-axis "Story Points Remaining" 0 --> 22
-    line [22, 18, 14, 9, 4, 0]
-```
-
 Track the completion of story points over the sprint duration:
 
-| Date | Story Points Remaining | Notes |
-|------|----------------------|-------|
-| 10 Mar | 22 | Sprint start |
-| 12 Mar | 18 | Project setup and task form underway |
-| 14 Mar | 14 | Validation and task rendering added |
-| 16 Mar | 9 | Completion toggle and edit function progressed |
-| 18 Mar | 4 | Delete function and responsive CSS nearly complete |
-| 20 Mar | 0 | Sprint end (target) |
+| Date | Story Points Remaining | Backlog Items Completed | Notes |
+|------|----------------------|------------------------|-------|
+| 10 Mar | 22 | — | Sprint start. Project planning and setup |
+| 11 Mar | 20 | BL-01 | Project structure created, HTML skeleton in place |
+| 12 Mar | 17 | BL-02 | Task creation form working with all fields |
+| 13 Mar | 15 | BL-03 | Validation added and tested |
+| 14 Mar | 12 | BL-04 | Task list rendering with priority colours |
+| 15 Mar | 10 | BL-05 | Completion toggle working with visual feedback |
+| 17 Mar | 7 | BL-06 | Edit functionality complete with form reuse |
+| 18 Mar | 5 | BL-07 | Delete with confirmation prompt working |
+| 19 Mar | 0 | BL-08 | Responsive CSS complete, all features tested |
+
+Note: No work was completed on 16 Mar (Sunday). The burndown line flattens here which reflects a realistic break in development.
 
 ---
 
 ## 4.3 Backlog Reviews
 
-Document any changes to the backlog during the sprint (e.g. items re-prioritised, acceptance criteria updated, new items added).
+Document any changes to the backlog during the sprint.
 
 | Date | Change | Reason |
 |------|--------|--------|
-| | | |
+| 12 Mar | Added localStorage save/load to BL-02 scope | Realised that without persistence, all test data was lost on page refresh during development. Added basic localStorage read/write to the task manager functions early rather than waiting for it as a separate future backlog item. |
+| 14 Mar | Updated BL-04 acceptance criteria to include sorting | Originally the task list displayed tasks in the order they were added. Updated to sort incomplete tasks first, then by deadline, so the most urgent tasks appear at the top. |
+| 17 Mar | Added scrollIntoView behaviour to BL-06 | During mobile testing, noticed that clicking "Edit" on a task near the bottom of the list did not bring the form into view. Added smooth scroll to the edit function. |
+| 19 Mar | Moved BL-13 (localStorage persistence) from future backlog to completed | localStorage was implemented during BL-02 development on 12 Mar. Marked as complete in the backlog since the acceptance criteria are fully met. |
 
----
+
 
 
 # 5. Software Tools & Techniques
