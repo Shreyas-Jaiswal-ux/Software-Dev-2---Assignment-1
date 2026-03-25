@@ -248,7 +248,7 @@ function createTaskCard(task) {
         <div class="task-card__details">
             <span class="task-card__badge ${deadlineClass}">${deadlineLabel}</span>
             <span class="task-card__badge ${priorityClass}">${task.priority}</span>
-            <span class="task-card__badge">${escapeHtml(task.module)}</span>
+           ${task.module ? `<span class="task-card__badge">${escapeHtml(task.module)}</span>` : ''}
         </div>
         <div class="task-card__actions">
             <button class="btn btn--small btn--edit" data-action="edit">Edit</button>
