@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,45 +10,78 @@
 
     <!-- Header -->
     <header class="header">
-        <h1 class="header__title">StudyFlow</h1>
-        <p class="header__summary" id="task-summary">No tasks yet</p>
+        <div class="header__inner">
+            <h1 class="header__title">
+                <span class="header__icon">&#10003;</span>
+                StudyFlow
+            </h1>
+            <p class="header__tagline">Your personal task planner</p>
+        </div>
+        <div class="header__stats" id="task-stats">
+            <div class="stat">
+                <span class="stat__number" id="stat-total">0</span>
+                <span class="stat__label">Total</span>
+            </div>
+            <div class="stat">
+                <span class="stat__number" id="stat-active">0</span>
+                <span class="stat__label">Active</span>
+            </div>
+            <div class="stat">
+                <span class="stat__number" id="stat-done">0</span>
+                <span class="stat__label">Done</span>
+            </div>
+        </div>
+        <div class="header__progress">
+            <div class="progress-bar">
+                <div class="progress-bar__fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <p class="progress-bar__text" id="progress-text">No tasks yet</p>
+        </div>
     </header>
 
     <main class="main">
 
         <!-- Task Form Section -->
         <section class="form-section">
-            <h2 class="form-section__title" id="form-title">Add New Task</h2>
+            <h2 class="form-section__title" id="form-title">
+                <span class="form-icon" id="form-icon">+</span>
+                Add New Task
+            </h2>
             <form class="task-form" id="task-form">
 
                 <div class="form-group">
                     <label for="task-title">Task Title</label>
-                    <input type="text" id="task-title" class="form-input" placeholder="e.g. SD2 Assignment">
+                    <input type="text" id="task-title" class="form-input" placeholder="e.g. SD2 Assignment" autocomplete="off">
                     <span class="error-message" id="title-error"></span>
                 </div>
 
-                <div class="form-group">
-                    <label for="task-deadline">Deadline</label>
-                    <input type="date" id="task-deadline" class="form-input">
-                    <span class="error-message" id="deadline-error"></span>
-                </div>
+                <div class="form-row">
+                    <div class="form-group form-group--half">
+                        <label for="task-deadline">Deadline</label>
+                        <input type="date" id="task-deadline" class="form-input">
+                        <span class="error-message" id="deadline-error"></span>
+                    </div>
 
-                <div class="form-group">
-                    <label for="task-priority">Priority</label>
-                    <select id="task-priority" class="form-input">
-                        <option value="Low">Low</option>
-                        <option value="Medium" selected>Medium</option>
-                        <option value="High">High</option>
-                    </select>
+                    <div class="form-group form-group--half">
+                        <label for="task-priority">Priority</label>
+                        <select id="task-priority" class="form-input">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="task-module">Module</label>
-                    <input type="text" id="task-module" class="form-input" placeholder="e.g. Software Development 2">
+                    <input type="text" id="task-module" class="form-input" placeholder="e.g. Software Development 2" autocomplete="off">
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn--primary" id="submit-btn">Add Task</button>
+                    <button type="submit" class="btn btn--primary" id="submit-btn">
+                        <span class="btn__icon" id="btn-icon">+</span>
+                        Add Task
+                    </button>
                     <button type="button" class="btn btn--secondary" id="cancel-btn" style="display: none;">Cancel</button>
                 </div>
 
@@ -58,14 +90,24 @@
 
         <!-- Task List Section -->
         <section class="task-section">
-            <h2 class="task-section__title">My Tasks</h2>
+            <div class="task-section__header">
+                <h2 class="task-section__title">My Tasks</h2>
+                <span class="task-section__count" id="task-count"></span>
+            </div>
             <div class="task-list" id="task-list">
-                <!-- Task cards will be rendered here by JavaScript -->
-                <p class="empty-state" id="empty-state">No tasks yet — add one to get started!</p>
+                <div class="empty-state" id="empty-state">
+                    <div class="empty-state__icon">&#128203;</div>
+                    <p class="empty-state__title">No tasks yet</p>
+                    <p class="empty-state__subtitle">Add your first task to get started!</p>
+                </div>
             </div>
         </section>
 
     </main>
+
+    <footer class="footer">
+        <p>StudyFlow &mdash; Built by Shreyas Jaiswal &bull; Software Development 2</p>
+    </footer>
 
     <script src="app.js"></script>
 
