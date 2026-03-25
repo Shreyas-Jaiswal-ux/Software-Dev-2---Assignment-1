@@ -809,10 +809,10 @@ Confirm which user stories and system requirements have been implemented:
 Recommended evidence:
 - Mobile view (375px) showing the task list with multiple tasks
 - Desktop view (1024px+) showing the two-column layout
-- Task creation — form filled in with a new task
-- Completed task — showing strikethrough and faded appearance
-- Edit mode — form pre-filled with an existing task's values
-- Validation — error messages displayed for empty title and past deadline
-- Empty state — the message shown when no tasks exist
+- Task creation - form filled in with a new task
+- Completed task - showing strikethrough and faded appearance
+- Edit mode - form pre-filled with an existing task's values
+- Validation - error messages displayed for empty title and past deadline
+- Empty state - the message shown when no tasks exist
 
 
