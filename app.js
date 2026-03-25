@@ -1,4 +1,3 @@
-
 /* ========================================
    StudyFlow — app.js
    Application logic and behaviour
@@ -22,6 +21,26 @@ function getTodayString() {
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+}
+
+function isOverdue(deadline) {
+    return deadline < getTodayString();
+}
+
+function getDaysUntil(deadline) {
+    const today = new Date(getTodayString() + 'T00:00:00');
+    const due = new Date(deadline + 'T00:00:00');
+    const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+    return diff;
+}
+
+function getDeadlineLabel(deadline) {
+    const days = getDaysUntil(deadline);
+    if (days < 0) return 'Overdue';
+    if (days === 0) return 'Due today';
+    if (days === 1) return 'Due tomorrow';
+    if (days <= 7) return `${days} days left`;
+    return formatDate(deadline);
 }
 
 // ---- Task Manager ----
@@ -106,8 +125,8 @@ function validateForm(title, deadline) {
         deadlineInput.classList.add('form-input--error');
         isValid = false;
     }
-    // Check deadline is not in the past
-    else if (deadline < getTodayString()) {
+    // Check deadline is not in the past (allow past dates when editing)
+    else if (!editingTaskId && deadline < getTodayString()) {
         deadlineError.textContent = 'Deadline cannot be in the past.';
         deadlineInput.classList.add('form-input--error');
         isValid = false;
@@ -127,33 +146,83 @@ function clearErrors() {
 
 function renderTasks() {
     const taskList = document.getElementById('task-list');
-    const emptyState = document.getElementById('empty-state');
-    const summary = document.getElementById('task-summary');
 
-    // Clear task list (keep empty state element)
+    // Clear task list
     taskList.innerHTML = '';
 
     if (tasks.length === 0) {
-        taskList.innerHTML = '<p class="empty-state" id="empty-state">No tasks yet — add one to get started!</p>';
-        summary.textContent = 'No tasks yet';
+        taskList.innerHTML = `
+            <div class="empty-state" id="empty-state">
+                <div class="empty-state__icon">&#128203;</div>
+                <p class="empty-state__title">No tasks yet</p>
+                <p class="empty-state__subtitle">Add your first task to get started!</p>
+            </div>
+        `;
+        updateStats();
         return;
     }
-
-    // Update summary
-    const completedCount = tasks.filter(t => t.completed).length;
-    summary.textContent = `${completedCount} of ${tasks.length} tasks completed`;
 
     // Sort: incomplete first, then by deadline
     const sortedTasks = [...tasks].sort((a, b) => {
         if (a.completed !== b.completed) return a.completed ? 1 : -1;
+        // Within incomplete: overdue first, then by deadline
+        if (!a.completed && !b.completed) {
+            const aOverdue = isOverdue(a.deadline);
+            const bOverdue = isOverdue(b.deadline);
+            if (aOverdue !== bOverdue) return aOverdue ? -1 : 1;
+        }
         return a.deadline.localeCompare(b.deadline);
     });
 
-    // Render each task
-    sortedTasks.forEach(task => {
+    // Render each task with staggered animation
+    sortedTasks.forEach((task, index) => {
         const card = createTaskCard(task);
+        card.style.animationDelay = `${index * 0.05}s`;
         taskList.appendChild(card);
     });
+
+    updateStats();
+}
+
+function updateStats() {
+    const total = tasks.length;
+    const completed = tasks.filter(t => t.completed).length;
+    const active = total - completed;
+    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+    // Update stat numbers
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-active').textContent = active;
+    document.getElementById('stat-done').textContent = completed;
+
+    // Update progress bar
+    const progressFill = document.getElementById('progress-fill');
+    progressFill.style.width = percentage + '%';
+
+    // Add glow effect when 100% complete
+    if (percentage === 100 && total > 0) {
+        progressFill.classList.add('progress-bar__fill--complete');
+    } else {
+        progressFill.classList.remove('progress-bar__fill--complete');
+    }
+
+    // Update progress text
+    const progressText = document.getElementById('progress-text');
+    if (total === 0) {
+        progressText.textContent = 'No tasks yet';
+    } else if (percentage === 100) {
+        progressText.textContent = 'All tasks completed!';
+    } else {
+        progressText.textContent = `${percentage}% complete (${completed}/${total})`;
+    }
+
+    // Update task count badge
+    const taskCount = document.getElementById('task-count');
+    if (total > 0) {
+        taskCount.textContent = `${active} active`;
+    } else {
+        taskCount.textContent = '';
+    }
 }
 
 function createTaskCard(task) {
@@ -162,6 +231,9 @@ function createTaskCard(task) {
     card.dataset.id = task.id;
 
     const priorityClass = `task-card__badge--priority-${task.priority.toLowerCase()}`;
+    const overdue = !task.completed && isOverdue(task.deadline);
+    const deadlineLabel = task.completed ? formatDate(task.deadline) : getDeadlineLabel(task.deadline);
+    const deadlineClass = overdue ? 'task-card__badge--overdue' : 'task-card__badge--deadline';
 
     card.innerHTML = `
         <div class="task-card__header">
@@ -169,12 +241,12 @@ function createTaskCard(task) {
                 type="checkbox" 
                 class="task-card__checkbox" 
                 ${task.completed ? 'checked' : ''}
-                aria-label="Mark ${task.title} as ${task.completed ? 'incomplete' : 'complete'}"
+                aria-label="Mark ${escapeHtml(task.title)} as ${task.completed ? 'incomplete' : 'complete'}"
             >
             <span class="task-card__title">${escapeHtml(task.title)}</span>
         </div>
         <div class="task-card__details">
-            <span class="task-card__badge task-card__badge--deadline">${formatDate(task.deadline)}</span>
+            <span class="task-card__badge ${deadlineClass}">${deadlineLabel}</span>
             <span class="task-card__badge ${priorityClass}">${task.priority}</span>
             <span class="task-card__badge">${escapeHtml(task.module)}</span>
         </div>
@@ -223,22 +295,27 @@ function startEditing(task) {
     document.getElementById('task-deadline').value = task.deadline;
     document.getElementById('task-priority').value = task.priority;
     document.getElementById('task-module').value = task.module;
-    document.getElementById('form-title').textContent = 'Edit Task';
-    document.getElementById('submit-btn').textContent = 'Save Changes';
+    document.getElementById('form-title').innerHTML = '<span class="form-icon" id="form-icon">&#9998;</span> Edit Task';
+    document.getElementById('submit-btn').innerHTML = '<span class="btn__icon">&#10003;</span> Save Changes';
     document.getElementById('cancel-btn').style.display = 'inline-flex';
+
+    document.querySelector('.form-section').classList.add('form-section--editing');
 
     clearErrors();
 
     // Scroll to form on mobile
-    document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function cancelEditing() {
     editingTaskId = null;
     document.getElementById('task-form').reset();
-    document.getElementById('form-title').textContent = 'Add New Task';
-    document.getElementById('submit-btn').textContent = 'Add Task';
+    document.getElementById('form-title').innerHTML = '<span class="form-icon" id="form-icon">+</span> Add New Task';
+    document.getElementById('submit-btn').innerHTML = '<span class="btn__icon">+</span> Add Task';
     document.getElementById('cancel-btn').style.display = 'none';
+
+    document.querySelector('.form-section').classList.remove('form-section--editing');
+
     clearErrors();
 }
 
